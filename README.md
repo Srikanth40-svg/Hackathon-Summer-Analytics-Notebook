@@ -10,14 +10,14 @@ from scipy.signal import savgol_filter
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
-# Load data
+
 df = pd.read_csv("/kaggle/input/summer-analytics-mid-hackathon/hacktrain.csv")
 
-# Encode class labels
+
 label_encoder = LabelEncoder()
 df['class'] = label_encoder.fit_transform(df['class'])
 
-# Feature engineering function
+
 def create_features(df):
     # Select only NDVI columns (assuming they start with '20')
     ndvi_cols = [col for col in df.columns if col.startswith('20')]
@@ -51,15 +51,15 @@ def create_features(df):
     
     return features
 
-# Create features
+
 X = create_features(df)
 y = df['class']
 
-# Train-test split
+
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y)
 
-# Build pipeline with standardization and logistic regression
+
 model = make_pipeline(
     StandardScaler(),
     LogisticRegression(
@@ -72,10 +72,10 @@ model = make_pipeline(
     )
 )
 
-# Train model
+
 model.fit(X_train, y_train)
 
-# Evaluate
+
 y_pred = model.predict(X_test)
 print(classification_report(
     y_test,
@@ -84,7 +84,7 @@ print(classification_report(
     target_names=label_encoder.classes_
 ))
 
-# Process test data and create submission
+
 test_data = pd.read_csv("/kaggle/input/summer-analytics-mid-hackathon/hacktest.csv")
 X_test_final = create_features(test_data)
 y_test_final = model.predict(X_test_final)
